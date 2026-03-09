@@ -1,0 +1,144 @@
+CloudWatch Alarm Configurations
+================================
+
+Instance ID : i-06c37f7d08d0c85a2
+Instance Type: t3.micro
+Region      : us-east-1
+SNS Topic   : arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+
+──────────────────────────────────────────────────────────────────
+Alarm 1: HighCPUUtilization
+──────────────────────────────────────────────────────────────────
+AlarmArn            : arn:aws:cloudwatch:us-east-1:677746514416:alarm:HighCPUUtilization
+AlarmDescription    : Alert when CPU exceeds 80% for 10 minutes
+MetricName          : CPUUtilization
+Namespace           : AWS/EC2
+Statistic           : Average
+Dimensions          : InstanceId = i-06c37f7d08d0c85a2
+Period              : 300 seconds (5 minutes)
+EvaluationPeriods   : 2 (10 minutes total)
+Threshold           : 80%
+ComparisonOperator  : GreaterThanThreshold
+TreatMissingData    : notBreaching
+AlarmActions        : arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+OKActions           : arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+
+Creation Command:
+aws cloudwatch put-metric-alarm \
+  --alarm-name HighCPUUtilization \
+  --alarm-description "Alert when CPU exceeds 80% for 10 minutes" \
+  --metric-name CPUUtilization \
+  --namespace AWS/EC2 \
+  --statistic Average \
+  --period 300 \
+  --threshold 80 \
+  --comparison-operator GreaterThanThreshold \
+  --evaluation-periods 2 \
+  --dimensions Name=InstanceId,Value=i-06c37f7d08d0c85a2 \
+  --alarm-actions arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts \
+  --ok-actions arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts \
+  --treat-missing-data notBreaching
+
+──────────────────────────────────────────────────────────────────
+Alarm 2: HighMemoryUtilization
+──────────────────────────────────────────────────────────────────
+AlarmArn            : arn:aws:cloudwatch:us-east-1:677746514416:alarm:HighMemoryUtilization
+AlarmDescription    : Alert when memory exceeds 85%
+MetricName          : MemoryUtilization
+Namespace           : CWAgent
+Statistic           : Average
+Dimensions          : InstanceId = i-06c37f7d08d0c85a2
+Period              : 300 seconds (5 minutes)
+EvaluationPeriods   : 2 (10 minutes total)
+Threshold           : 85%
+ComparisonOperator  : GreaterThanThreshold
+TreatMissingData    : (default)
+AlarmActions        : arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+
+Creation Command:
+aws cloudwatch put-metric-alarm \
+  --alarm-name HighMemoryUtilization \
+  --alarm-description "Alert when memory exceeds 85%" \
+  --metric-name MemoryUtilization \
+  --namespace CWAgent \
+  --statistic Average \
+  --period 300 \
+  --threshold 85 \
+  --comparison-operator GreaterThanThreshold \
+  --evaluation-periods 2 \
+  --dimensions Name=InstanceId,Value=i-06c37f7d08d0c85a2 \
+  --alarm-actions arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+
+──────────────────────────────────────────────────────────────────
+Alarm 3: LowDiskSpace
+──────────────────────────────────────────────────────────────────
+AlarmArn            : arn:aws:cloudwatch:us-east-1:677746514416:alarm:LowDiskSpace
+AlarmDescription    : Alert when disk usage exceeds 80%
+MetricName          : disk_used_percent
+Namespace           : CWAgent
+Statistic           : Average
+Dimensions          : InstanceId = i-06c37f7d08d0c85a2, path = /
+Period              : 300 seconds (5 minutes)
+EvaluationPeriods   : 1 (5 minutes total)
+Threshold           : 80%
+ComparisonOperator  : GreaterThanThreshold
+TreatMissingData    : (default)
+AlarmActions        : arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+
+Creation Command:
+aws cloudwatch put-metric-alarm \
+  --alarm-name LowDiskSpace \
+  --alarm-description "Alert when disk usage exceeds 80%" \
+  --metric-name disk_used_percent \
+  --namespace CWAgent \
+  --statistic Average \
+  --period 300 \
+  --threshold 80 \
+  --comparison-operator GreaterThanThreshold \
+  --evaluation-periods 1 \
+  --dimensions Name=InstanceId,Value=i-06c37f7d08d0c85a2 Name=path,Value=/ \
+  --alarm-actions arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+
+──────────────────────────────────────────────────────────────────
+Alarm 4: HighErrorRate
+──────────────────────────────────────────────────────────────────
+AlarmArn            : arn:aws:cloudwatch:us-east-1:677746514416:alarm:HighErrorRate
+AlarmDescription    : Alert when error rate exceeds 10 per 5 minutes
+MetricName          : ErrorCount
+Namespace           : Application
+Statistic           : Sum
+Dimensions          : (none - account-wide custom metric)
+Period              : 300 seconds (5 minutes)
+EvaluationPeriods   : 1 (5 minutes total)
+Threshold           : 10
+ComparisonOperator  : GreaterThanThreshold
+TreatMissingData    : (default)
+AlarmActions        : arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+
+Log Metric Filter:
+  Log Group    : /aws/application/api
+  Filter Name  : ErrorCount
+  Pattern      : [timestamp, request_id, level = "ERROR", ...]
+  Metric Name  : ErrorCount
+  Namespace    : Application
+  Metric Value : 1
+
+Creation Commands:
+aws logs put-metric-filter \
+  --log-group-name /aws/application/api \
+  --filter-name ErrorCount \
+  --filter-pattern '[timestamp, request_id, level = "ERROR", ...]' \
+  --metric-transformations \
+    metricName=ErrorCount,metricNamespace=Application,metricValue=1
+
+aws cloudwatch put-metric-alarm \
+  --alarm-name HighErrorRate \
+  --alarm-description "Alert when error rate exceeds 10 per 5 minutes" \
+  --metric-name ErrorCount \
+  --namespace Application \
+  --statistic Sum \
+  --period 300 \
+  --threshold 10 \
+  --comparison-operator GreaterThanThreshold \
+  --evaluation-periods 1 \
+  --alarm-actions arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts

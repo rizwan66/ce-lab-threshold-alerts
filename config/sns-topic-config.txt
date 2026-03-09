@@ -1,0 +1,43 @@
+SNS Topic Configuration
+=======================
+
+Topic Name      : CloudWatchAlerts
+Topic ARN       : arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts
+Region          : us-east-1
+AWS Account     : 677746514416
+Environment Tag : Production
+
+Subscription
+------------
+Protocol                : email
+Endpoint                : rizwan.nasir@hotmail.com
+Subscription ARN        : arn:aws:sns:us-east-1:677746514416:CloudWatchAlerts:705d66b9-2f86-45b9-a31f-a6d8005e3c4f
+Status                  : Confirmed
+Subscriptions Confirmed : 1
+Subscriptions Pending   : 0
+Subscriptions Deleted   : 0
+
+Alarm Actions Attached
+----------------------
+HighCPUUtilization    -> AlarmActions + OKActions
+HighMemoryUtilization -> AlarmActions
+LowDiskSpace          -> AlarmActions
+HighErrorRate         -> AlarmActions
+
+Creation Commands
+-----------------
+# Create topic
+TOPIC_ARN=$(aws sns create-topic \
+  --name CloudWatchAlerts \
+  --tags Key=Environment,Value=Production \
+  --query 'TopicArn' \
+  --output text)
+
+# Subscribe email
+aws sns subscribe \
+  --topic-arn $TOPIC_ARN \
+  --protocol email \
+  --notification-endpoint rizwan.nasir@hotmail.com
+
+# Verify subscription
+aws sns list-subscriptions-by-topic --topic-arn $TOPIC_ARN
