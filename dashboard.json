@@ -1,0 +1,273 @@
+{
+  "widgets": [
+    {
+      "type": "text",
+      "x": 0, "y": 0, "width": 24, "height": 1,
+      "properties": {
+        "markdown": "# Web Tier Health Dashboard\n**Environment:** Production | **Region:** us-east-1 | **Last Updated:** Auto-refresh every 60s\n\n**On-Call:** [Slack #oncall](https://slack.com) | **Runbook:** [Wiki](https://wiki.company.com)"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 1, "width": 6, "height": 3,
+      "properties": {
+        "title": "Current Request Rate",
+        "metrics": [
+          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Sum", "period": 60}]
+        ],
+        "view": "singleValue",
+        "region": "us-east-1"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 6, "y": 1, "width": 6, "height": 3,
+      "properties": {
+        "title": "Error Rate (%)",
+        "metrics": [
+          ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"id": "m1", "visible": false, "stat": "Sum"}],
+          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"id": "m2", "visible": false, "stat": "Sum"}],
+          [{"expression": "(m1/m2)*100", "label": "Error Rate %", "id": "e1"}]
+        ],
+        "view": "singleValue",
+        "region": "us-east-1",
+        "period": 300
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 1, "width": 6, "height": 3,
+      "properties": {
+        "title": "P95 Latency",
+        "metrics": [
+          ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "p95"}]
+        ],
+        "view": "singleValue",
+        "region": "us-east-1",
+        "period": 300,
+        "setPeriodToTimeRange": true
+      }
+    },
+    {
+      "type": "metric",
+      "x": 18, "y": 1, "width": 6, "height": 3,
+      "properties": {
+        "title": "Healthy Targets",
+        "metrics": [
+          ["AWS/ApplicationELB", "HealthyHostCount", "TargetGroup", "targetgroup/project1-tf-app-tg/b36816f6fa55a324", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Average"}]
+        ],
+        "view": "singleValue",
+        "region": "us-east-1",
+        "period": 60
+      }
+    },
+    {
+      "type": "text",
+      "x": 0, "y": 4, "width": 24, "height": 1,
+      "properties": {
+        "markdown": "## Golden Signals (Last 3 Hours)"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 5, "width": 12, "height": 6,
+      "properties": {
+        "title": "Traffic - Request Rate",
+        "metrics": [
+          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Sum", "label": "Requests/min"}]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"label": "Requests", "min": 0}},
+        "annotations": {
+          "horizontal": [
+            {"label": "Capacity limit (1000 req/min)", "value": 1000, "fill": "above", "color": "#ff0000"}
+          ],
+          "vertical": [
+            {"label": "Last deployment", "value": "2026-03-09T15:52:00Z", "color": "#00ff00"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 5, "width": 12, "height": 6,
+      "properties": {
+        "title": "Errors - HTTP Status Codes + Error Rate %",
+        "metrics": [
+          ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Sum", "id": "m5xx", "color": "#d13212", "label": "5XX Errors"}],
+          ["AWS/ApplicationELB", "HTTPCode_Target_4XX_Count", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Sum", "id": "m4xx", "color": "#ff7f0e", "label": "4XX Errors"}],
+          ["AWS/ApplicationELB", "HTTPCode_Target_2XX_Count", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Sum", "id": "m2xx", "color": "#2ca02c", "label": "2XX Success"}],
+          ["AWS/ApplicationELB", "RequestCount",              "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Sum", "id": "mtotal", "visible": false}],
+          [{"expression": "(m5xx/mtotal)*100", "label": "5XX Error Rate %", "id": "e5xx", "color": "#d13212", "yAxis": "right"}],
+          [{"expression": "(m4xx/mtotal)*100", "label": "4XX Error Rate %", "id": "e4xx", "color": "#ff7f0e", "yAxis": "right"}]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {
+          "left":  {"label": "Count",    "min": 0},
+          "right": {"label": "Rate (%)", "min": 0, "max": 100}
+        },
+        "annotations": {
+          "horizontal": [
+            {"label": "5XX SLO (1%)", "value": 1, "fill": "above", "color": "#ff0000", "yAxis": "right"}
+          ],
+          "vertical": [
+            {"label": "Last deployment", "value": "2026-03-09T15:52:00Z", "color": "#00ff00"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 11, "width": 12, "height": 6,
+      "properties": {
+        "title": "Latency - Response Time Percentiles",
+        "metrics": [
+          ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "p50", "label": "P50"}],
+          ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "p95", "label": "P95"}],
+          ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "p99", "label": "P99"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {"left": {"min": 0, "label": "Seconds"}},
+        "annotations": {
+          "horizontal": [
+            {"value": 0.5, "label": "P95 SLO (500ms)", "fill": "above", "color": "#ff0000"},
+            {"value": 1.0, "label": "P99 SLO (1s)",    "fill": "above", "color": "#d13212"}
+          ],
+          "vertical": [
+            {"label": "Last deployment", "value": "2026-03-09T15:52:00Z", "color": "#00ff00"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 11, "width": 12, "height": 6,
+      "properties": {
+        "title": "Saturation - Target Health",
+        "metrics": [
+          ["AWS/ApplicationELB", "HealthyHostCount",   "TargetGroup", "targetgroup/project1-tf-app-tg/b36816f6fa55a324", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Average", "color": "#2ca02c", "label": "Healthy"}],
+          ["AWS/ApplicationELB", "UnHealthyHostCount", "TargetGroup", "targetgroup/project1-tf-app-tg/b36816f6fa55a324", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Average", "color": "#d13212", "label": "Unhealthy"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60
+      }
+    },
+    {
+      "type": "text",
+      "x": 0, "y": 17, "width": 24, "height": 1,
+      "properties": {
+        "markdown": "## EC2 Resource Utilization"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 18, "width": 6, "height": 5,
+      "properties": {
+        "title": "CPU Utilization",
+        "metrics": [
+          ["AWS/EC2", "CPUUtilization", "InstanceId", "i-06c37f7d08d0c85a2", {"stat": "Average", "label": "CPU %"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {"left": {"min": 0, "max": 100, "label": "%"}},
+        "annotations": {
+          "horizontal": [{"value": 80, "label": "Warning (80%)", "fill": "above", "color": "#ff7f0e"}]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 6, "y": 18, "width": 6, "height": 5,
+      "properties": {
+        "title": "Memory Utilization",
+        "metrics": [
+          ["CWAgent", "mem_used_percent", "InstanceId", "i-06c37f7d08d0c85a2", {"stat": "Average", "label": "Memory %"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {"left": {"min": 0, "max": 100}},
+        "annotations": {
+          "horizontal": [{"value": 85, "label": "Warning (85%)", "fill": "above", "color": "#ff7f0e"}]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 18, "width": 6, "height": 5,
+      "properties": {
+        "title": "Network In/Out",
+        "metrics": [
+          ["AWS/EC2", "NetworkIn",  "InstanceId", "i-06c37f7d08d0c85a2", {"stat": "Sum", "label": "Network In",  "color": "#2ca02c"}],
+          ["AWS/EC2", "NetworkOut", "InstanceId", "i-06c37f7d08d0c85a2", {"stat": "Sum", "label": "Network Out", "color": "#ff7f0e"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300
+      }
+    },
+    {
+      "type": "metric",
+      "x": 18, "y": 18, "width": 6, "height": 5,
+      "properties": {
+        "title": "Disk Usage",
+        "metrics": [
+          ["CWAgent", "disk_used_percent", "InstanceId", "i-06c37f7d08d0c85a2", "path", "/", {"stat": "Average", "label": "Disk Used %"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {"left": {"min": 0, "max": 100}},
+        "annotations": {
+          "horizontal": [{"value": 80, "label": "Warning (80%)", "fill": "above", "color": "#ff7f0e"}]
+        }
+      }
+    },
+    {
+      "type": "text",
+      "x": 0, "y": 23, "width": 24, "height": 1,
+      "properties": {
+        "markdown": "## Correlation View (Root Cause Analysis)"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 24, "width": 24, "height": 6,
+      "properties": {
+        "title": "Latency vs Request Rate vs Error Rate vs CPU",
+        "metrics": [
+          ["AWS/ApplicationELB", "TargetResponseTime",        "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "p95",     "yAxis": "left",  "label": "Latency P95 (s)", "color": "#1f77b4"}],
+          ["AWS/ApplicationELB", "RequestCount",              "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Sum",     "yAxis": "right", "label": "Request Rate",    "color": "#2ca02c", "id": "mcorr_total"}],
+          ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", "app/project1-tf-alb/672a5c798070df76", {"stat": "Sum",     "yAxis": "right", "label": "5XX Errors",      "color": "#d13212", "id": "mcorr_5xx"}],
+          ["AWS/EC2",            "CPUUtilization",            "InstanceId",   "i-06c37f7d08d0c85a2",                  {"stat": "Average", "yAxis": "right", "label": "CPU %",           "color": "#9467bd"}],
+          [{"expression": "(mcorr_5xx/mcorr_total)*100", "label": "5XX Error Rate %", "id": "ecorr_rate", "yAxis": "right", "color": "#ff7f0e"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {
+          "left":  {"label": "Latency (s)", "min": 0},
+          "right": {"label": "Count / %",  "min": 0}
+        },
+        "annotations": {
+          "horizontal": [
+            {"label": "P95 SLO (500ms)", "value": 0.5, "fill": "above", "color": "#ff0000", "yAxis": "left"}
+          ],
+          "vertical": [
+            {"label": "Last deployment", "value": "2026-03-09T15:52:00Z", "color": "#00ff00"}
+          ]
+        }
+      }
+    }
+  ]
+}
