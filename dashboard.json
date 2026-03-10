@@ -268,6 +268,75 @@
           ]
         }
       }
+    },
+    {
+      "type": "text",
+      "x": 0, "y": 30, "width": 24, "height": 1,
+      "properties": {
+        "markdown": "## Alarm Status"
+      }
+    },
+    {
+      "type": "alarm",
+      "x": 0, "y": 31, "width": 24, "height": 3,
+      "properties": {
+        "title": "CloudWatch Alarm Summary",
+        "alarms": [
+          "arn:aws:cloudwatch:us-east-1:677746514416:alarm:HighCPUUtilization",
+          "arn:aws:cloudwatch:us-east-1:677746514416:alarm:HighMemoryUtilization",
+          "arn:aws:cloudwatch:us-east-1:677746514416:alarm:LowDiskSpace",
+          "arn:aws:cloudwatch:us-east-1:677746514416:alarm:HighErrorRate"
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "x": 0, "y": 34, "width": 24, "height": 1,
+      "properties": {
+        "markdown": "## Business Metrics"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 35, "width": 8, "height": 6,
+      "properties": {
+        "title": "Orders per Minute",
+        "metrics": [
+          ["Application", "OrderCount", {"stat": "Sum", "period": 60, "label": "Orders/min"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "yAxis": {"left": {"label": "Orders", "min": 0}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8, "y": 35, "width": 8, "height": 6,
+      "properties": {
+        "title": "Revenue (Rolling 5 min)",
+        "metrics": [
+          ["Application", "OrderRevenue", {"stat": "Sum", "period": 300, "label": "Revenue $"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "yAxis": {"left": {"label": "USD", "min": 0}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16, "y": 35, "width": 8, "height": 6,
+      "properties": {
+        "title": "Avg Order Value",
+        "metrics": [
+          ["Application", "OrderRevenue", {"id": "rev", "visible": false, "stat": "Sum"}],
+          ["Application", "OrderCount",   {"id": "cnt", "visible": false, "stat": "Sum"}],
+          [{"expression": "rev/cnt", "label": "Avg Order $", "id": "aov", "color": "#1f77b4"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {"left": {"label": "USD", "min": 0}}
+      }
     }
   ]
 }

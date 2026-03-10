@@ -1,0 +1,169 @@
+{
+  "widgets": [
+    {
+      "type": "text",
+      "x": 0, "y": 0, "width": 24, "height": 1,
+      "properties": {
+        "markdown": "# Instance Drill-Down Dashboard\nPer-instance view for root-cause analysis. Switch to [Overview](#dashboards:name=WebTierMonitoring) for the big picture.\n\n**Instance:** i-06c37f7d08d0c85a2 (cloudwatch) | **Type:** t3.micro | **AZ:** us-east-1f"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 1, "width": 12, "height": 6,
+      "properties": {
+        "title": "CPU Utilization",
+        "metrics": [
+          ["AWS/EC2", "CPUUtilization", "InstanceId", "i-06c37f7d08d0c85a2", {"label": "cloudwatch", "color": "#1f77b4", "stat": "Average"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"min": 0, "max": 100, "label": "%"}},
+        "annotations": {
+          "horizontal": [
+            {"value": 80, "label": "Alarm threshold (80%)", "fill": "above", "color": "#ff0000"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 1, "width": 12, "height": 6,
+      "properties": {
+        "title": "Network In / Out",
+        "metrics": [
+          ["AWS/EC2", "NetworkIn",  "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Network In",  "color": "#2ca02c", "stat": "Sum"}],
+          ["AWS/EC2", "NetworkOut", "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Network Out", "color": "#ff7f0e", "stat": "Sum"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"label": "Bytes", "min": 0}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 7, "width": 24, "height": 6,
+      "properties": {
+        "title": "Status Check Results",
+        "metrics": [
+          ["AWS/EC2", "StatusCheckFailed",          "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Combined check failed",  "color": "#d13212", "stat": "Maximum"}],
+          ["AWS/EC2", "StatusCheckFailed_Instance", "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Instance check failed", "color": "#ff7f0e", "stat": "Maximum"}],
+          ["AWS/EC2", "StatusCheckFailed_System",   "InstanceId", "i-06c37f7d08d0c85a2", {"label": "System check failed",   "color": "#9467bd", "stat": "Maximum"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"min": 0, "max": 1, "label": "0=OK / 1=FAIL"}},
+        "annotations": {
+          "horizontal": [
+            {"value": 1, "label": "Failure", "color": "#d13212"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 13, "width": 12, "height": 6,
+      "properties": {
+        "title": "Memory Utilization (CWAgent)",
+        "metrics": [
+          ["CWAgent", "mem_used_percent", "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Memory %", "color": "#9467bd", "stat": "Average"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"min": 0, "max": 100, "label": "%"}},
+        "annotations": {
+          "horizontal": [
+            {"value": 85, "label": "Alarm threshold (85%)", "fill": "above", "color": "#ff0000"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 13, "width": 12, "height": 6,
+      "properties": {
+        "title": "Disk Usage — / (CWAgent)",
+        "metrics": [
+          ["CWAgent", "disk_used_percent", "InstanceId", "i-06c37f7d08d0c85a2", "path", "/", {"label": "Disk Used %", "color": "#8c564b", "stat": "Average"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"min": 0, "max": 100, "label": "%"}},
+        "annotations": {
+          "horizontal": [
+            {"value": 80, "label": "Alarm threshold (80%)", "fill": "above", "color": "#ff0000"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 19, "width": 12, "height": 6,
+      "properties": {
+        "title": "Disk I/O — Read / Write Ops",
+        "metrics": [
+          ["AWS/EC2", "DiskReadOps",  "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Read Ops",  "color": "#2ca02c", "stat": "Sum"}],
+          ["AWS/EC2", "DiskWriteOps", "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Write Ops", "color": "#ff7f0e", "stat": "Sum"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"label": "Ops", "min": 0}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 19, "width": 12, "height": 6,
+      "properties": {
+        "title": "Disk I/O — Read / Write Bytes",
+        "metrics": [
+          ["AWS/EC2", "DiskReadBytes",  "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Read Bytes",  "color": "#2ca02c", "stat": "Sum"}],
+          ["AWS/EC2", "DiskWriteBytes", "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Write Bytes", "color": "#ff7f0e", "stat": "Sum"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"label": "Bytes", "min": 0}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 25, "width": 12, "height": 6,
+      "properties": {
+        "title": "Network Packets In / Out",
+        "metrics": [
+          ["AWS/EC2", "NetworkPacketsIn",  "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Packets In",  "color": "#2ca02c", "stat": "Sum"}],
+          ["AWS/EC2", "NetworkPacketsOut", "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Packets Out", "color": "#ff7f0e", "stat": "Sum"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {"left": {"label": "Packets", "min": 0}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 25, "width": 12, "height": 6,
+      "properties": {
+        "title": "CPU Credit Usage vs Balance (t3.micro)",
+        "metrics": [
+          ["AWS/EC2", "CPUCreditUsage",   "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Credit Usage",   "color": "#d13212", "stat": "Sum"}],
+          ["AWS/EC2", "CPUCreditBalance", "InstanceId", "i-06c37f7d08d0c85a2", {"label": "Credit Balance", "color": "#2ca02c", "stat": "Average"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {"left": {"label": "Credits", "min": 0}},
+        "annotations": {
+          "horizontal": [
+            {"value": 10, "label": "Low credit warning", "fill": "below", "color": "#ff7f0e"}
+          ]
+        }
+      }
+    }
+  ]
+}
